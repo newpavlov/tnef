@@ -1,0 +1,21 @@
+[package]
+name = "tnef"
+version = "0.1.0"
+authors = ["Artyom Pavlov <newpavlov@gmail.com>"]
+edition = "2018"
+license = "MIT OR Apache-2.0"
+description = "TNEF parser"
+documentation = "https://docs.rs/tnef"
+repository = "https://github.com/newpavlov/tnef"
+keywords = ["email", "microsoft"]
+categories = ["encoding", "parser-implementations"]
+readme = "README.md"
+
+[dependencies]
+byteorder = "1"
+chrono = "0.4"
+codepage = "0.1"
+encoding_rs = "0.8"
+
+[badges]
+travis-ci = { repository = "newpavlov/tnef" }
