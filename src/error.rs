@@ -14,7 +14,7 @@ pub enum Error {
     InvlidDateTime,
     InvalidRendData,
     InvalidString,
-    AttachementParsingFailure,
+    AttachmentParsingFailure,
 }
 
 impl fmt::Display for Error {

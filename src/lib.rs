@@ -3,10 +3,10 @@
 //! TNEF file contains a stream of records called "attributes". Using
 //! `TnefReader` you can read attributes stored in the provided TNEF buffer.
 //! At the moment we do not handle parsing of attribute data outside of
-//! attachement attributes.
+//! attachment attributes.
 //!
 //! If you just want to unpack attachments stored in TNEF, you can use a
-//! convenience function `read_attachements`.
+//! convenience function `read_attachments`.
 //!
 //! # Usage example
 //! ```
@@ -310,10 +310,10 @@ impl<'a> Attachment<'a> {
 
 /// Convenience function for extracting attachments from TNEF data.
 ///
-/// It assumes that attachements always contains the following fields:
+/// It assumes that attachments always contains the following fields:
 /// `title`, `data`, `create_date`, `modify_date`, `rend_data` and `props`.
-/// If one of those fields is missing the attachement will be ignored.
-pub fn read_attachements(buf: &[u8]) -> Result<Vec<Attachment>, Error> {
+/// If one of those fields is missing the attachment will be ignored.
+pub fn read_attachments(buf: &[u8]) -> Result<Vec<Attachment>, Error> {
     let r = TnefReader::new(&buf)?;
     let code_page = r.get_code_page();
     let mut buf = vec![];
@@ -326,7 +326,7 @@ pub fn read_attachements(buf: &[u8]) -> Result<Vec<Attachment>, Error> {
         };
         // first attachment attribute must be AttachRendData
         if t.is_default() && id != AttachAttrId::AttachRendData {
-            return Err(Error::AttachementParsingFailure);
+            return Err(Error::AttachmentParsingFailure);
         }
         match id {
             AttachAttrId::AttachRendData => {
@@ -336,42 +336,42 @@ pub fn read_attachements(buf: &[u8]) -> Result<Vec<Attachment>, Error> {
                 if t.data.is_none() {
                     t.data = Some(data);
                 } else {
-                    return Err(Error::AttachementParsingFailure);
+                    return Err(Error::AttachmentParsingFailure);
                 }
             }
             AttachAttrId::Title => {
                 if t.title.is_none() {
                     t.title = Some(parse_string(data, code_page)?);
                 } else {
-                    return Err(Error::AttachementParsingFailure);
+                    return Err(Error::AttachmentParsingFailure);
                 }
             }
             AttachAttrId::MetaFile => {
                 if t.meta.is_none() {
                     t.meta = Some(data);
                 } else {
-                    return Err(Error::AttachementParsingFailure);
+                    return Err(Error::AttachmentParsingFailure);
                 }
             }
             AttachAttrId::CreateDate => {
                 if t.create_date.is_none() {
                     t.create_date = Some(parse_datetime(data)?);
                 } else {
-                    return Err(Error::AttachementParsingFailure);
+                    return Err(Error::AttachmentParsingFailure);
                 }
             }
             AttachAttrId::ModifyDate => {
                 if t.modify_date.is_none() {
                     t.modify_date = Some(parse_datetime(data)?);
                 } else {
-                    return Err(Error::AttachementParsingFailure);
+                    return Err(Error::AttachmentParsingFailure);
                 }
             }
             AttachAttrId::TransportFilename => {
                 if t.transport_filename.is_none() {
                     t.transport_filename = Some(parse_string(data, code_page)?);
                 } else {
-                    return Err(Error::AttachementParsingFailure);
+                    return Err(Error::AttachmentParsingFailure);
                 }
             }
             // last attachment attribute must be Attachment
@@ -379,7 +379,7 @@ pub fn read_attachements(buf: &[u8]) -> Result<Vec<Attachment>, Error> {
                 if t.props.is_none() {
                     t.props = Some(data);
                 } else {
-                    return Err(Error::AttachementParsingFailure);
+                    return Err(Error::AttachmentParsingFailure);
                 }
                 if let Some(att) = Attachment::from_raw(t) {
                     buf.push(att);

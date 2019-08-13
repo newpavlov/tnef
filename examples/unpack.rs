@@ -8,7 +8,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut buf = vec![];
     f.read_to_end(&mut buf)?;
 
-    for a in tnef::read_attachements(&buf)? {
+    for a in tnef::read_attachments(&buf)? {
         println!("\
                 Title: {:?}\nCreate date: {:?}\nModify date: {:?}\n\
                 Data len: {:?}\nMeta len: {:?}\n\

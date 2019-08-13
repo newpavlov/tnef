@@ -3,10 +3,10 @@ A basic [TNEF] parser written in pure Rust.
 
 TNEF file contains a stream of records called "attributes". Using `TnefReader`
 you can read attributes stored in the provided TNEF buffer. At the moment we do
-not handle parsing of attribute data outside of attachement attributes.
+not handle parsing of attribute data outside of attachment attributes.
 
 If you just want to unpack attachments stored in TNEF, you can use a
-convenience function `read_attachements`.
+convenience function `read_attachments`.
 
 [TNEF]: https://en.wikipedia.org/wiki/Transport_Neutral_Encapsulation_Format
 
