@@ -1,4 +1,4 @@
-# TNEF [![Build Status](https://travis-ci.org/newpavlov/tnef.svg?branch=master)](https://travis-ci.org/newpavlov/tnef) [![dependency status](https://deps.rs/repo/github/newpavlov/tnef/status.svg)](https://deps.rs/repo/github/newpavlov/tnef)
+# TNEF [![crates.io](https://img.shields.io/crates/v/tnef.svg)](https://crates.io/crates/tnef) [![Documentation](https://docs.rs/tnef/badge.svg)](https://docs.rs/tnef) [![Build Status](https://travis-ci.org/newpavlov/tnef.svg?branch=master)](https://travis-ci.org/newpavlov/tnef) [![dependency status](https://deps.rs/repo/github/newpavlov/tnef/status.svg)](https://deps.rs/repo/github/newpavlov/tnef)
 A basic [TNEF] parser written in pure Rust.
 
 TNEF file contains a stream of records called "attributes". Using `TnefReader`
