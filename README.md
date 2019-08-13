@@ -8,7 +8,10 @@ not handle parsing of attribute data outside of attachment attributes.
 If you just want to unpack attachments stored in TNEF, you can use a
 convenience function `read_attachments`.
 
+Based on official [specifications], revision v11.0.
+
 [TNEF]: https://en.wikipedia.org/wiki/Transport_Neutral_Encapsulation_Format
+[specifications]: https://docs.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxtnef/1f0544d7-30b7-4194-b58f-adc82f3763bb
 
 ## Usage example
 ```rust
