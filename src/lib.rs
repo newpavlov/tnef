@@ -1,4 +1,4 @@
-//! A basic [TNEF] parser.
+//! A basic [TNEF] parser written in pure Rust.
 //!
 //! TNEF file contains a stream of records called "attributes". Using
 //! `TnefReader` you can read attributes stored in the provided TNEF buffer.

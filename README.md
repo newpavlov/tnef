@@ -1,5 +1,5 @@
 # TNEF [![Build Status](https://travis-ci.org/newpavlov/tnef.svg?branch=master)](https://travis-ci.org/newpavlov/tnef) [![dependency status](https://deps.rs/repo/github/newpavlov/tnef/status.svg)](https://deps.rs/repo/github/newpavlov/tnef)
-A basic [TNEF] parser.
+A basic [TNEF] parser written in pure Rust.
 
 TNEF file contains a stream of records called "attributes". Using `TnefReader`
 you can read attributes stored in the provided TNEF buffer. At the moment we do
