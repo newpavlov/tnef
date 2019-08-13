@@ -62,13 +62,13 @@ impl<'a> TnefReader<'a> {
     fn read_attribute(&mut self)
         -> Result<Option<(AttributeId, &'a [u8])>, Error>
     {
-        if self.src.len() == 0 { return Ok(None); }
+        if self.src.is_empty() { return Ok(None); }
         let level = self.split_at(1)?[0];
         match (level, self.msg_section) {
             (0x01, true) | (0x02, false) => (),
-            (0x01, false) => Err(Error::UnexpectedMessageAttribute)?,
+            (0x01, false) => return Err(Error::UnexpectedMessageAttribute),
             (0x02, true) => self.msg_section = false,
-            _ => Err(Error::InvalidAttributeLevel(level))?,
+            _ => return Err(Error::InvalidAttributeLevel(level)),
         }
         let raw_id = self.read_u32()?;
         let id = AttributeId::from_u32(self.msg_section, raw_id)?;
@@ -81,7 +81,7 @@ impl<'a> TnefReader<'a> {
     fn verify_checksum(&mut self, msg: &[u8]) -> Result<(), Error> {
         let val = self.read_u16()?;
         let sum: u16 = msg.iter()
-            .map(|b| *b as u16)
+            .map(|b| u16::from(*b))
             .fold(0, |sum, i| sum.wrapping_add(i));
         if sum != val {
             Err(Error::ChecksumMismatch)
@@ -108,7 +108,7 @@ impl<'a> TnefReader<'a> {
     fn read_header(&mut self) -> Result<(), Error> {
         let h = self.read_u32()?;
         if h != 0x223e_9f78 {
-            return Err(Error::InvalidHeader)?;
+            return Err(Error::InvalidHeader);
         }
         // ignore LegacyKey
         let _ = self.read_u16()?;
@@ -133,14 +133,14 @@ impl<'a> TnefReader<'a> {
         let id = self.read_u32()?;
         let len = self.read_u32()?;
         if level != 0x01 || id != 0x0006_9007 || len != 8 {
-            return Err(Error::InvalidVersion)?;
+            return Err(Error::InvalidVersion);
         }
         let msg = self.split_at(8)?;
         self.verify_checksum(msg)?;
         let code_page = LE::read_u32(&msg[..4]);
         let sec_code_page = LE::read_u32(&msg[4..]);
         if sec_code_page != 0 {
-            return Err(Error::InvalidOemCodePage)?;
+            return Err(Error::InvalidOemCodePage);
         }
 
         codepage::to_encoding(code_page as u16)
@@ -174,19 +174,19 @@ impl<'a> std::iter::FusedIterator for TnefReader<'a> {}
 fn parse_datetime(data: &[u8]) -> Result<NaiveDateTime, Error> {
     use chrono::naive::{NaiveDate, NaiveTime};
     if data.len() != 14 { return Err(Error::InvlidDateTime); }
-    let year = LE::read_u16(&data[0..2]);
-    let month = LE::read_u16(&data[2..4]);
-    let day = LE::read_u16(&data[4..6]);
-    let h = LE::read_u16(&data[6..8]);
-    let m = LE::read_u16(&data[8..10]);
-    let s = LE::read_u16(&data[10..12]);
+    let year = i32::from(LE::read_u16(&data[0..2]));
+    let month = u32::from(LE::read_u16(&data[2..4]));
+    let day = u32::from(LE::read_u16(&data[4..6]));
+    let hour = u32::from(LE::read_u16(&data[6..8]));
+    let minute = u32::from(LE::read_u16(&data[8..10]));
+    let second = u32::from(LE::read_u16(&data[10..12]));
     let _day_of_week = LE::read_u16(&data[12..14]);
 
-    let d = NaiveDate::from_ymd_opt(year as i32, month as u32, day as u32)
+    let date = NaiveDate::from_ymd_opt(year, month, day)
         .ok_or(Error::InvlidDateTime)?;
-    let t = NaiveTime::from_hms_opt(h as u32, m as u32, s as u32)
+    let time = NaiveTime::from_hms_opt(hour, minute, second)
         .ok_or(Error::InvlidDateTime)?;
-    Ok(NaiveDateTime::new(d, t))
+    Ok(NaiveDateTime::new(date, time))
 }
 
 /// Attachment type.
@@ -219,7 +219,7 @@ impl RendData {
         let attach_type = match LE::read_u16(&data[0..2]) {
             0x0001 => AttachType::File,
             0x0002 => AttachType::Ole,
-            _ => Err(Error::InvalidRendData)?,
+            _ => return Err(Error::InvalidRendData),
         };
         let attach_position = LE::read_u32(&data[2..6]);
         let render_width = LE::read_u16(&data[6..8]);
@@ -227,7 +227,7 @@ impl RendData {
         let flags = match LE::read_u32(&data[10..14]) {
             0x0000_0000 => AttachDataFlags::FileDataDefault,
             0x0000_0001 => AttachDataFlags::FileDataMacBinary,
-            _ => Err(Error::InvalidRendData)?,
+            _ => return Err(Error::InvalidRendData),
         };
         Ok(Self {
             attach_type, attach_position, render_width, render_height, flags,
@@ -237,7 +237,7 @@ impl RendData {
 
 fn parse_string(data: &[u8], code_page: u32) -> Result<String, Error> {
     let n = data.len();
-    if data.len() == 0 || data[n-1] != 0x00 {
+    if data.is_empty() || data[n-1] != 0x00 {
         return Err(Error::InvalidString);
     }
     let (s, malformed) = codepage::to_encoding(code_page as u16)

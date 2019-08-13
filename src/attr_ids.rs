@@ -11,9 +11,10 @@ pub enum AttributeId {
 
 impl AttributeId {
     pub(crate) fn from_u32(is_msg: bool, id: u32) -> Result<Self, Error> {
+        use AttributeId::*;
         Ok(match (is_msg, id) {
-            (true, id) => Self::Message(MessageAttrId::from_u32(id)?),
-            (false, id) => Self::Attachment(AttachAttrId::from_u32(id)?),
+            (true, id) => Message(MessageAttrId::from_u32(id)?),
+            (false, id) => Attachment(AttachAttrId::from_u32(id)?),
         })
     }
 }
