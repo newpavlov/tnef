@@ -250,17 +250,16 @@ fn parse_string(data: &[u8], code_page: u32) -> Result<String, Error> {
     Ok(s.to_string())
 }
 
-/// TNEF attachment.
 #[derive(Default)]
-pub struct RawAttachment<'a> {
-    pub data: Option<&'a [u8]>,
-    pub title: Option<String>,
-    pub meta: Option<&'a [u8]>,
-    pub create_date: Option<NaiveDateTime>,
-    pub modify_date: Option<NaiveDateTime>,
-    pub transport_filename: Option<String>,
-    pub rend_data: Option<RendData>,
-    pub props: Option<&'a [u8]>,
+struct RawAttachment<'a> {
+    data: Option<&'a [u8]>,
+    title: Option<String>,
+    meta: Option<&'a [u8]>,
+    create_date: Option<NaiveDateTime>,
+    modify_date: Option<NaiveDateTime>,
+    transport_filename: Option<String>,
+    rend_data: Option<RendData>,
+    props: Option<&'a [u8]>,
 }
 
 impl<'a> RawAttachment<'a> {
