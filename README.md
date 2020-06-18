@@ -26,7 +26,7 @@ This crate requires Rust 1.32.0 or later.
 
 ## License
 
-All crates licensed under either of
+Licensed under either of
 
  * [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
  * [MIT license](http://opensource.org/licenses/MIT)
